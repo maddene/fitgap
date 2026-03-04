@@ -266,35 +266,68 @@ export default function AssessmentForm() {
           <div className="space-y-6">
             {currentSection.questions.map((question, idx) => (
               <div key={question.id} className="border-b border-gray-100 pb-6 last:border-0">
-                <label className="block mb-3">
+                <div className="block mb-3">
                   <span className="text-sm font-semibold text-gray-700 mb-2 block">
                     Question {idx + 1}
                   </span>
                   <p className="text-gray-900 mb-4">{question.text}</p>
 
-                  <div className="flex items-center gap-3">
-                    {[
-                      { value: 0, label: 'Not at all', color: 'bg-red-100 text-red-700 hover:bg-red-200' },
-                      { value: 1, label: 'Minimally', color: 'bg-orange-100 text-orange-700 hover:bg-orange-200' },
-                      { value: 2, label: 'Moderately', color: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },
-                      { value: 3, label: 'Substantially', color: 'bg-lime-100 text-lime-700 hover:bg-lime-200' },
-                      { value: 4, label: 'Completely', color: 'bg-green-100 text-green-700 hover:bg-green-200' }
-                    ].map(option => (
-                      <button
-                        key={option.value}
-                        onClick={() => handleResponse(question.id, option.value)}
-                        className={`
-                          flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-all
-                          ${responses[question.id] === option.value
-                            ? `${option.color} ring-2 ring-offset-2 ring-blue-500 shadow-md`
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
-                        `}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </label>
+                  {/* Handle subquestions if they exist */}
+                  {question.subQuestions ? (
+                    <div className="space-y-4 pl-4">
+                      {question.subQuestions.map((subQ) => (
+                        <div key={subQ.id} className="bg-gray-50 p-4 rounded-lg">
+                          <p className="text-gray-800 mb-3 text-sm">{subQ.text}</p>
+                          <div className="flex items-center gap-2">
+                            {[
+                              { value: 0, label: 'Not at all', color: 'bg-red-100 text-red-700 hover:bg-red-200' },
+                              { value: 1, label: 'Minimally', color: 'bg-orange-100 text-orange-700 hover:bg-orange-200' },
+                              { value: 2, label: 'Moderately', color: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },
+                              { value: 3, label: 'Substantially', color: 'bg-lime-100 text-lime-700 hover:bg-lime-200' },
+                              { value: 4, label: 'Completely', color: 'bg-green-100 text-green-700 hover:bg-green-200' }
+                            ].map(option => (
+                              <button
+                                key={option.value}
+                                onClick={() => handleResponse(subQ.id, option.value)}
+                                className={`
+                                  flex-1 py-2 px-2 rounded-lg font-medium text-xs transition-all
+                                  ${responses[subQ.id] === option.value
+                                    ? `${option.color} ring-2 ring-offset-2 ring-blue-500 shadow-md`
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                                `}
+                              >
+                                {option.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      {[
+                        { value: 0, label: 'Not at all', color: 'bg-red-100 text-red-700 hover:bg-red-200' },
+                        { value: 1, label: 'Minimally', color: 'bg-orange-100 text-orange-700 hover:bg-orange-200' },
+                        { value: 2, label: 'Moderately', color: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },
+                        { value: 3, label: 'Substantially', color: 'bg-lime-100 text-lime-700 hover:bg-lime-200' },
+                        { value: 4, label: 'Completely', color: 'bg-green-100 text-green-700 hover:bg-green-200' }
+                      ].map(option => (
+                        <button
+                          key={option.value}
+                          onClick={() => handleResponse(question.id, option.value)}
+                          className={`
+                            flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-all
+                            ${responses[question.id] === option.value
+                              ? `${option.color} ring-2 ring-offset-2 ring-blue-500 shadow-md`
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                          `}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
