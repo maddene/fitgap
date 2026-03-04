@@ -452,9 +452,8 @@ export default function AssessmentResults() {
 
                   {/* Progress Bar */}
                   <div className="mt-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <div className="text-sm text-gray-600 mb-2">
                       <span>Score: {realm.score} / {realm.possible}</span>
-                      <span>{realm.percentage}%</span>
                     </div>
                     <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
                       <div
