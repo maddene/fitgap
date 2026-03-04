@@ -284,7 +284,7 @@ export default function AssessmentForm() {
               <div key={question.id} className="border-b border-gray-100 pb-8 last:border-0">
                 <div className="block mb-4">
                   <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 block">
-                    Question {idx + 1}
+                    Question {question.id}
                   </span>
                   <p className="text-icce-dark mb-5 text-base leading-relaxed font-medium">{question.text}</p>
 
