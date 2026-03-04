@@ -131,17 +131,20 @@ export default function AssessmentForm() {
     assessmentData.realms.forEach(realm => {
       realm.sections.forEach(section => {
         section.questions.forEach(question => {
-          // Count subquestions if they exist
+          // Count each question as 1, regardless of subquestions
+          totalQuestions++;
+
+          // Check if question is answered
           if (question.subQuestions && question.subQuestions.length > 0) {
-            question.subQuestions.forEach(subQ => {
-              totalQuestions++;
-              if (responses[subQ.id] !== undefined && responses[subQ.id] !== '') {
-                answeredQuestions++;
-              }
-            });
+            // For questions with subquestions, check if ALL subquestions are answered
+            const allSubQuestionsAnswered = question.subQuestions.every(subQ =>
+              responses[subQ.id] !== undefined && responses[subQ.id] !== ''
+            );
+            if (allSubQuestionsAnswered) {
+              answeredQuestions++;
+            }
           } else {
-            // Count regular question
-            totalQuestions++;
+            // For regular questions, check if answered
             if (responses[question.id] !== undefined && responses[question.id] !== '') {
               answeredQuestions++;
             }
