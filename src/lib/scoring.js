@@ -90,47 +90,38 @@ export const calculateScores = (responses, assessmentData) => {
 };
 
 /**
- * Get a descriptive rating based on percentage score
+ * Get a descriptive rating based on average score (0-4 scale)
+ * Based on Scott's benchmarks:
+ * - Average 4-5: On track with FIT implementation
+ * - Average ~3: Limited
+ * - Below 3: Low congruence with FIT culture
  * @param {number} percentage - Score as percentage (0-100)
  * @returns {Object} Rating level and description
  */
 export const getRating = (percentage) => {
-  if (percentage >= 90) {
+  // Convert percentage back to 0-4 scale average for interpretation
+  const avgScore = (percentage / 100) * 4;
+
+  if (avgScore >= 3.6) { // ~90%+ (4-5 average range)
     return {
-      level: 'Excellent',
-      description: 'Yes, Fully Always',
+      level: 'On Track',
+      description: 'Strong FIT implementation',
       color: 'text-icce-teal',
       bgColor: 'bg-icce-teal/20',
       borderColor: 'border-icce-teal'
     };
-  } else if (percentage >= 70) {
+  } else if (avgScore >= 3.0) { // 75-89% (~3-3.5 average)
     return {
-      level: 'Good',
-      description: 'Mostly, Regularly',
-      color: 'text-emerald-700',
-      bgColor: 'bg-emerald-100',
-      borderColor: 'border-emerald-500'
-    };
-  } else if (percentage >= 50) {
-    return {
-      level: 'Moderate',
-      description: 'Partially, Frequently',
+      level: 'Limited',
+      description: 'Developing FIT practice',
       color: 'text-yellow-700',
       bgColor: 'bg-yellow-100',
       borderColor: 'border-yellow-500'
     };
-  } else if (percentage >= 30) {
+  } else { // Below 75% (< 3 average)
     return {
-      level: 'Limited',
-      description: 'Very Limited, Not Often',
-      color: 'text-orange-700',
-      bgColor: 'bg-orange-100',
-      borderColor: 'border-orange-500'
-    };
-  } else {
-    return {
-      level: 'Minimal',
-      description: 'No, None, Never',
+      level: 'Low Congruence',
+      description: 'Needs FIT development',
       color: 'text-red-700',
       bgColor: 'bg-red-100',
       borderColor: 'border-red-500'
@@ -152,4 +143,57 @@ export const getScoreLabel = (score) => {
     4: 'Completely'
   };
   return labels[score] || 'Not answered';
+};
+
+/**
+ * Check if an individual score needs attention (3 or below)
+ * @param {number} score - Score value (0-4)
+ * @returns {boolean} True if score is 3 or below
+ */
+export const isLowScore = (score) => {
+  return score !== null && score !== undefined && score <= 3;
+};
+
+/**
+ * Get all low-scoring questions from responses
+ * @param {Object} responses - Object with question IDs as keys and scores as values
+ * @param {Object} assessmentData - The assessment questions data structure
+ * @returns {Array} Array of low-scoring questions with details
+ */
+export const getLowScoreQuestions = (responses, assessmentData) => {
+  const lowScores = [];
+
+  assessmentData.realms.forEach((realm) => {
+    realm.sections.forEach((section) => {
+      section.questions.forEach((question) => {
+        if (question.subQuestions && question.subQuestions.length > 0) {
+          question.subQuestions.forEach((subQ) => {
+            const score = responses[subQ.id];
+            if (isLowScore(score)) {
+              lowScores.push({
+                questionId: subQ.id,
+                questionText: subQ.text,
+                score: score,
+                realm: realm.name,
+                section: section.name
+              });
+            }
+          });
+        } else {
+          const score = responses[question.id];
+          if (isLowScore(score)) {
+            lowScores.push({
+              questionId: question.id,
+              questionText: question.text,
+              score: score,
+              realm: realm.name,
+              section: section.name
+            });
+          }
+        }
+      });
+    });
+  });
+
+  return lowScores;
 };

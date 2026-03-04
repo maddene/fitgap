@@ -134,18 +134,20 @@ export default function AssessmentForm() {
           // Count each question as 1, regardless of subquestions
           totalQuestions++;
 
-          // Check if question is answered
+          // Check if question is answered (including N/A which is null)
           if (question.subQuestions && question.subQuestions.length > 0) {
             // For questions with subquestions, check if ALL subquestions are answered
+            // null (N/A) counts as answered, undefined does not
             const allSubQuestionsAnswered = question.subQuestions.every(subQ =>
-              responses[subQ.id] !== undefined && responses[subQ.id] !== ''
+              responses[subQ.id] !== undefined
             );
             if (allSubQuestionsAnswered) {
               answeredQuestions++;
             }
           } else {
             // For regular questions, check if answered
-            if (responses[question.id] !== undefined && responses[question.id] !== '') {
+            // null (N/A) counts as answered, undefined does not
+            if (responses[question.id] !== undefined) {
               answeredQuestions++;
             }
           }
@@ -158,6 +160,58 @@ export default function AssessmentForm() {
 
   const progress = getProgress();
   const progressPercentage = Math.round((progress.answered / progress.total) * 100);
+
+  const getSectionProgress = () => {
+    let totalQuestions = 0;
+    let answeredQuestions = 0;
+
+    currentSection.questions.forEach(question => {
+      totalQuestions++;
+
+      if (question.subQuestions && question.subQuestions.length > 0) {
+        const allSubQuestionsAnswered = question.subQuestions.every(subQ =>
+          responses[subQ.id] !== undefined
+        );
+        if (allSubQuestionsAnswered) {
+          answeredQuestions++;
+        }
+      } else {
+        if (responses[question.id] !== undefined) {
+          answeredQuestions++;
+        }
+      }
+    });
+
+    return { total: totalQuestions, answered: answeredQuestions };
+  };
+
+  const sectionProgress = getSectionProgress();
+
+  const getSectionProgressByIndex = (realmIdx, sectionIdx) => {
+    const realm = assessmentData.realms[realmIdx];
+    const section = realm.sections[sectionIdx];
+    let totalQuestions = 0;
+    let answeredQuestions = 0;
+
+    section.questions.forEach(question => {
+      totalQuestions++;
+
+      if (question.subQuestions && question.subQuestions.length > 0) {
+        const allSubQuestionsAnswered = question.subQuestions.every(subQ =>
+          responses[subQ.id] !== undefined
+        );
+        if (allSubQuestionsAnswered) {
+          answeredQuestions++;
+        }
+      } else {
+        if (responses[question.id] !== undefined) {
+          answeredQuestions++;
+        }
+      }
+    });
+
+    return { total: totalQuestions, answered: answeredQuestions };
+  };
 
   if (showInfoForm) {
     return (
@@ -268,14 +322,50 @@ export default function AssessmentForm() {
         {/* Realm & Section Info */}
         <div className="bg-white rounded-2xl shadow-medium p-9 mb-6">
           <div className="border-l-4 border-icce-teal pl-5 mb-8">
-            <h2 className="text-3xl font-bold text-icce-dark tracking-tight">
-              {currentRealm.name}
-              <span className="text-sm font-medium text-gray-400 ml-4">Version {currentRealm.version}</span>
-            </h2>
-            <h3 className="text-xl font-semibold text-icce-teal mt-3">{currentSection.name}</h3>
-            <p className="text-sm text-gray-500 mt-2 font-medium">
-              Section {currentSectionIndex + 1} of {totalSections} in this realm
-            </p>
+            <div className="flex items-start justify-between gap-6">
+              <div className="flex-1">
+                <h2 className="text-3xl font-bold text-icce-dark tracking-tight">
+                  {currentRealm.name}
+                  <span className="text-sm font-medium text-gray-400 ml-4">Version {currentRealm.version}</span>
+                </h2>
+                <h3 className="text-xl font-semibold text-icce-teal mt-3">
+                  {currentSection.name}
+                </h3>
+                <p className="text-sm text-gray-500 mt-2 font-medium">
+                  Section {currentSectionIndex + 1} of {totalSections} in this realm
+                </p>
+              </div>
+
+              {/* Section Navigation Dropdown */}
+              <div className="flex-none">
+                <label htmlFor="section-nav" className="block text-xs font-semibold text-gray-600 mb-2">
+                  Jump to Section
+                </label>
+                <select
+                  id="section-nav"
+                  className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-icce-teal focus:border-transparent transition-all shadow-soft text-sm font-medium bg-white cursor-pointer"
+                  value={`${currentRealmIndex}-${currentSectionIndex}`}
+                  onChange={(e) => {
+                    const [realmIdx, sectionIdx] = e.target.value.split('-').map(Number);
+                    setCurrentRealmIndex(realmIdx);
+                    setCurrentSectionIndex(sectionIdx);
+                  }}
+                >
+                  {assessmentData.realms.map((realm, realmIdx) => (
+                    <optgroup key={realm.id} label={realm.name}>
+                      {realm.sections.map((section, sectionIdx) => {
+                        const progress = getSectionProgressByIndex(realmIdx, sectionIdx);
+                        return (
+                          <option key={`${realm.id}-${section.name}`} value={`${realmIdx}-${sectionIdx}`}>
+                            {section.name} ({progress.answered}/{progress.total})
+                          </option>
+                        );
+                      })}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
 
           {/* Questions */}
