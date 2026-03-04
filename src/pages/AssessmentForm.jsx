@@ -295,6 +295,18 @@ export default function AssessmentForm() {
                         <div key={subQ.id} className="bg-gray-50 p-5 rounded-xl border border-gray-100">
                           <p className="text-gray-700 mb-4 text-sm leading-relaxed">{subQ.text}</p>
                           <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleResponse(subQ.id, responses[subQ.id] === null ? undefined : null)}
+                              className={`
+                                flex-none py-2.5 px-3 rounded-lg font-semibold text-xs transition-all duration-200
+                                ${responses[subQ.id] === null
+                                  ? 'bg-gray-200 text-gray-700 ring-2 ring-offset-2 ring-gray-400 shadow-soft scale-105'
+                                  : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}
+                              `}
+                              title="Not Applicable"
+                            >
+                              N/A
+                            </button>
                             {[
                               { value: 0, label: 'Not at all', color: 'bg-red-100 text-red-700 hover:bg-red-200' },
                               { value: 1, label: 'Minimally', color: 'bg-orange-100 text-orange-700 hover:bg-orange-200' },
@@ -304,7 +316,7 @@ export default function AssessmentForm() {
                             ].map(option => (
                               <button
                                 key={option.value}
-                                onClick={() => handleResponse(subQ.id, option.value)}
+                                onClick={() => handleResponse(subQ.id, responses[subQ.id] === option.value ? undefined : option.value)}
                                 className={`
                                   flex-1 py-2.5 px-2 rounded-lg font-semibold text-xs transition-all duration-200
                                   ${responses[subQ.id] === option.value
@@ -321,6 +333,18 @@ export default function AssessmentForm() {
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => handleResponse(question.id, responses[question.id] === null ? undefined : null)}
+                        className={`
+                          flex-none py-3 px-4 rounded-xl font-semibold text-sm transition-all duration-200
+                          ${responses[question.id] === null
+                            ? 'bg-gray-200 text-gray-700 ring-2 ring-offset-2 ring-gray-400 shadow-medium scale-105'
+                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}
+                        `}
+                        title="Not Applicable"
+                      >
+                        N/A
+                      </button>
                       {[
                         { value: 0, label: 'Not at all', color: 'bg-red-100 text-red-700 hover:bg-red-200' },
                         { value: 1, label: 'Minimally', color: 'bg-orange-100 text-orange-700 hover:bg-orange-200' },
@@ -330,7 +354,7 @@ export default function AssessmentForm() {
                       ].map(option => (
                         <button
                           key={option.value}
-                          onClick={() => handleResponse(question.id, option.value)}
+                          onClick={() => handleResponse(question.id, responses[question.id] === option.value ? undefined : option.value)}
                           className={`
                             flex-1 py-3 px-3 rounded-xl font-semibold text-sm transition-all duration-200
                             ${responses[question.id] === option.value

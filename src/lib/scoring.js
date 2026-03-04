@@ -28,16 +28,24 @@ export const calculateScores = (responses, assessmentData) => {
         // Handle questions with subquestions
         if (question.subQuestions && question.subQuestions.length > 0) {
           question.subQuestions.forEach(subQ => {
-            const score = responses[subQ.id] || 0;
+            const response = responses[subQ.id];
+            // Skip N/A (null) responses - they don't count towards score or total
+            if (response !== null && response !== undefined) {
+              const score = response || 0;
+              sectionTotal += score;
+              sectionPossible += 4; // Max score is 4 (0-4 scale)
+              sectionQuestions++;
+            }
+          });
+        } else {
+          const response = responses[question.id];
+          // Skip N/A (null) responses - they don't count towards score or total
+          if (response !== null && response !== undefined) {
+            const score = response || 0;
             sectionTotal += score;
             sectionPossible += 4; // Max score is 4 (0-4 scale)
             sectionQuestions++;
-          });
-        } else {
-          const score = responses[question.id] || 0;
-          sectionTotal += score;
-          sectionPossible += 4; // Max score is 4 (0-4 scale)
-          sectionQuestions++;
+          }
         }
       });
 
