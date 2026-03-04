@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { listUserAssessments, deleteAssessment as deleteAssessmentFromStorage } from '../lib/storage';
-import { FileText, Plus, LogOut, Eye, Trash2, Clock, CheckCircle2 } from 'lucide-react';
+import { FileText, Plus, LogOut, Eye, Trash2, Clock, CheckCircle2, BarChart3 } from 'lucide-react';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
@@ -186,13 +186,24 @@ export default function Dashboard() {
                           {orgAssessments.length} assessment{orgAssessments.length > 1 ? 's' : ''}
                         </p>
                       </div>
-                      <button
-                        onClick={() => createNewAssessmentForOrg(orgName)}
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-icce-teal bg-white border-2 border-icce-teal rounded-lg hover:bg-icce-teal hover:text-white transition-all"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Assessment
-                      </button>
+                      <div className="flex items-center gap-3">
+                        {orgAssessments.filter(a => a.status === 'completed').length >= 2 && (
+                          <button
+                            onClick={() => navigate(`/organization/${encodeURIComponent(orgName)}/compare`)}
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-purple-600 bg-white border-2 border-purple-600 rounded-lg hover:bg-purple-600 hover:text-white transition-all"
+                          >
+                            <BarChart3 className="w-4 h-4" />
+                            Compare Results
+                          </button>
+                        )}
+                        <button
+                          onClick={() => createNewAssessmentForOrg(orgName)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-icce-teal bg-white border-2 border-icce-teal rounded-lg hover:bg-icce-teal hover:text-white transition-all"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Add Assessment
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-2">

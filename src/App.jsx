@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import AssessmentForm from './pages/AssessmentForm';
 import AssessmentResults from './pages/AssessmentResults';
+import CompareResults from './pages/CompareResults';
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AssessmentResults />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/organization/:orgName/compare"
+            element={
+              <ProtectedRoute>
+                <CompareResults />
               </ProtectedRoute>
             }
           />
