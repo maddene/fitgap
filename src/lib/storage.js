@@ -1,4 +1,5 @@
 // API client for Netlify Functions + Blobs storage
+import { MOCK_MODE, mockStorageApi } from './mockData';
 
 const getAuthToken = () => {
   const user = window.netlifyIdentity?.currentUser();
@@ -27,6 +28,10 @@ const apiCall = async (endpoint, options = {}) => {
 
 // Save an assessment
 export const saveAssessment = async (userId, assessmentId, data) => {
+  if (MOCK_MODE) {
+    return mockStorageApi.saveAssessment(userId, assessmentId, data);
+  }
+
   return apiCall('', {
     method: 'POST',
     body: JSON.stringify({
@@ -38,17 +43,29 @@ export const saveAssessment = async (userId, assessmentId, data) => {
 
 // Get an assessment
 export const getAssessment = async (userId, assessmentId) => {
+  if (MOCK_MODE) {
+    return mockStorageApi.getAssessment(userId, assessmentId);
+  }
+
   const result = await apiCall(`?id=${assessmentId}`);
   return result;
 };
 
 // List all assessments for a user (sorted by most recent)
 export const listUserAssessments = async (userId) => {
+  if (MOCK_MODE) {
+    return mockStorageApi.listUserAssessments(userId);
+  }
+
   return apiCall('');
 };
 
 // Delete an assessment
 export const deleteAssessment = async (userId, assessmentId) => {
+  if (MOCK_MODE) {
+    return mockStorageApi.deleteAssessment(userId, assessmentId);
+  }
+
   return apiCall(`?id=${assessmentId}`, {
     method: 'DELETE',
   });
