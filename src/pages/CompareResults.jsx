@@ -261,6 +261,21 @@ export default function CompareResults() {
             </div>
           </div>
         )}
+
+        {/* Footer */}
+        <div className="mt-8 text-center pb-6">
+          <p className="text-sm text-gray-500">
+            Built for <span className="font-semibold text-icce-teal">The ICCE</span> by{' '}
+            <a
+              href="https://openfit.care"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-icce-teal hover:text-icce-teal-dark transition-colors"
+            >
+              OpenFIT.care
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
