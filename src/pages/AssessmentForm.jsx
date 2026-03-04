@@ -145,32 +145,32 @@ export default function AssessmentForm() {
 
   if (showInfoForm) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-icce-gray py-12 px-4">
         <div className="max-w-2xl mx-auto">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 font-medium"
+            className="inline-flex items-center gap-2 text-icce-teal hover:text-icce-teal-dark mb-8 font-semibold transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
 
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">New FITGAP Assessment</h2>
-            <p className="text-gray-600 mb-8">
+          <div className="bg-white rounded-2xl shadow-medium p-10">
+            <h2 className="text-4xl font-bold text-icce-dark mb-3 tracking-tight">New FITGAP Assessment</h2>
+            <p className="text-gray-600 mb-10 text-base leading-relaxed">
               Feedback-Informed Treatment GAP Assessment Tool by Scott D. Miller
             </p>
 
             <div className="space-y-6">
               <div>
-                <label htmlFor="organizationName" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="organizationName" className="block text-sm font-semibold text-gray-700 mb-2.5">
                   Organization Name *
                 </label>
                 <input
                   id="organizationName"
                   type="text"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-icce-teal focus:border-transparent transition-all shadow-soft text-base"
                   placeholder="Enter your organization name"
                   value={organizationName}
                   onChange={(e) => setOrganizationName(e.target.value)}
@@ -178,14 +178,14 @@ export default function AssessmentForm() {
               </div>
 
               <div>
-                <label htmlFor="assessorName" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="assessorName" className="block text-sm font-semibold text-gray-700 mb-2.5">
                   Assessor Name *
                 </label>
                 <input
                   id="assessorName"
                   type="text"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-icce-teal focus:border-transparent transition-all shadow-soft text-base"
                   placeholder="Enter your name"
                   value={assessorName}
                   onChange={(e) => setAssessorName(e.target.value)}
@@ -200,7 +200,7 @@ export default function AssessmentForm() {
                     alert('Please fill in all required fields');
                   }
                 }}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md hover:shadow-lg"
+                className="w-full bg-gradient-to-r from-icce-teal to-icce-teal-dark text-white py-4 px-6 rounded-xl font-bold hover:from-icce-teal-dark hover:to-icce-teal transition-all duration-200 shadow-medium hover:shadow-strong text-base"
               >
                 Begin Assessment
               </button>
@@ -212,88 +212,88 @@ export default function AssessmentForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-icce-gray py-10 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-8">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4"
+            className="inline-flex items-center gap-2 text-icce-teal hover:text-icce-teal-dark font-semibold mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">FITGAP Assessment</h1>
+          <div className="bg-white rounded-2xl shadow-medium p-7 mb-6">
+            <h1 className="text-3xl font-bold text-icce-dark mb-3 tracking-tight">FITGAP Assessment</h1>
             <div className="flex items-center justify-between text-sm text-gray-600">
               <div>
-                <span className="font-medium">{organizationName}</span> • {assessorName}
+                <span className="font-semibold text-icce-teal">{organizationName}</span> <span className="text-gray-400">•</span> {assessorName}
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                <span className="font-medium">{progress.answered} / {progress.total} questions</span>
+              <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg">
+                <CheckCircle className="w-4 h-4 text-emerald-600" />
+                <span className="font-semibold text-emerald-700">{progress.answered} / {progress.total} questions</span>
               </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-4">
-              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="mt-5">
+              <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-icce-teal to-icce-teal-dark transition-all duration-500"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1 text-right">{progressPercentage}% Complete</p>
+              <p className="text-xs text-gray-500 mt-2 text-right font-medium">{progressPercentage}% Complete</p>
             </div>
           </div>
         </div>
 
         {/* Realm & Section Info */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-          <div className="border-l-4 border-blue-600 pl-4 mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">
+        <div className="bg-white rounded-2xl shadow-medium p-9 mb-6">
+          <div className="border-l-4 border-icce-teal pl-5 mb-8">
+            <h2 className="text-3xl font-bold text-icce-dark tracking-tight">
               {currentRealm.name}
-              <span className="text-sm font-normal text-gray-500 ml-3">Version {currentRealm.version}</span>
+              <span className="text-sm font-medium text-gray-400 ml-4">Version {currentRealm.version}</span>
             </h2>
-            <h3 className="text-lg font-semibold text-blue-600 mt-2">{currentSection.name}</h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <h3 className="text-xl font-semibold text-icce-teal mt-3">{currentSection.name}</h3>
+            <p className="text-sm text-gray-500 mt-2 font-medium">
               Section {currentSectionIndex + 1} of {totalSections} in this realm
             </p>
           </div>
 
           {/* Questions */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {currentSection.questions.map((question, idx) => (
-              <div key={question.id} className="border-b border-gray-100 pb-6 last:border-0">
-                <div className="block mb-3">
-                  <span className="text-sm font-semibold text-gray-700 mb-2 block">
+              <div key={question.id} className="border-b border-gray-100 pb-8 last:border-0">
+                <div className="block mb-4">
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 block">
                     Question {idx + 1}
                   </span>
-                  <p className="text-gray-900 mb-4">{question.text}</p>
+                  <p className="text-icce-dark mb-5 text-base leading-relaxed font-medium">{question.text}</p>
 
                   {/* Handle subquestions if they exist */}
                   {question.subQuestions ? (
                     <div className="space-y-4 pl-4">
                       {question.subQuestions.map((subQ) => (
-                        <div key={subQ.id} className="bg-gray-50 p-4 rounded-lg">
-                          <p className="text-gray-800 mb-3 text-sm">{subQ.text}</p>
+                        <div key={subQ.id} className="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                          <p className="text-gray-700 mb-4 text-sm leading-relaxed">{subQ.text}</p>
                           <div className="flex items-center gap-2">
                             {[
                               { value: 0, label: 'Not at all', color: 'bg-red-100 text-red-700 hover:bg-red-200' },
                               { value: 1, label: 'Minimally', color: 'bg-orange-100 text-orange-700 hover:bg-orange-200' },
                               { value: 2, label: 'Moderately', color: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },
-                              { value: 3, label: 'Substantially', color: 'bg-lime-100 text-lime-700 hover:bg-lime-200' },
-                              { value: 4, label: 'Completely', color: 'bg-green-100 text-green-700 hover:bg-green-200' }
+                              { value: 3, label: 'Substantially', color: 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' },
+                              { value: 4, label: 'Completely', color: 'bg-icce-teal/20 text-icce-teal-dark hover:bg-icce-teal/30' }
                             ].map(option => (
                               <button
                                 key={option.value}
                                 onClick={() => handleResponse(subQ.id, option.value)}
                                 className={`
-                                  flex-1 py-2 px-2 rounded-lg font-medium text-xs transition-all
+                                  flex-1 py-2.5 px-2 rounded-lg font-semibold text-xs transition-all duration-200
                                   ${responses[subQ.id] === option.value
-                                    ? `${option.color} ring-2 ring-offset-2 ring-blue-500 shadow-md`
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                                    ? `${option.color} ring-2 ring-offset-2 ring-icce-teal shadow-soft scale-105`
+                                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}
                                 `}
                               >
                                 {option.label}
@@ -309,17 +309,17 @@ export default function AssessmentForm() {
                         { value: 0, label: 'Not at all', color: 'bg-red-100 text-red-700 hover:bg-red-200' },
                         { value: 1, label: 'Minimally', color: 'bg-orange-100 text-orange-700 hover:bg-orange-200' },
                         { value: 2, label: 'Moderately', color: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },
-                        { value: 3, label: 'Substantially', color: 'bg-lime-100 text-lime-700 hover:bg-lime-200' },
-                        { value: 4, label: 'Completely', color: 'bg-green-100 text-green-700 hover:bg-green-200' }
+                        { value: 3, label: 'Substantially', color: 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' },
+                        { value: 4, label: 'Completely', color: 'bg-icce-teal/20 text-icce-teal-dark hover:bg-icce-teal/30' }
                       ].map(option => (
                         <button
                           key={option.value}
                           onClick={() => handleResponse(question.id, option.value)}
                           className={`
-                            flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-all
+                            flex-1 py-3 px-3 rounded-xl font-semibold text-sm transition-all duration-200
                             ${responses[question.id] === option.value
-                              ? `${option.color} ring-2 ring-offset-2 ring-blue-500 shadow-md`
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                              ? `${option.color} ring-2 ring-offset-2 ring-icce-teal shadow-medium scale-105`
+                              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}
                           `}
                         >
                           {option.label}
@@ -338,7 +338,7 @@ export default function AssessmentForm() {
           <button
             onClick={previousSection}
             disabled={isFirstSection}
-            className="flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition"
+            className="flex items-center gap-2 px-7 py-3.5 bg-white text-gray-700 rounded-xl font-bold hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-soft hover:shadow-medium transition-all duration-200 border border-gray-200"
           >
             <ArrowLeft className="w-5 h-5" />
             Previous
@@ -347,7 +347,7 @@ export default function AssessmentForm() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 disabled:opacity-50 shadow-md transition"
+            className="flex items-center gap-2 px-7 py-3.5 bg-icce-dark text-white rounded-xl font-bold hover:bg-gray-800 disabled:opacity-50 shadow-soft hover:shadow-medium transition-all duration-200"
           >
             <Save className="w-5 h-5" />
             {saving ? 'Saving...' : 'Save Progress'}
@@ -356,7 +356,7 @@ export default function AssessmentForm() {
           {!isLastSection ? (
             <button
               onClick={nextSection}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 shadow-md transition"
+              className="flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-icce-teal to-icce-teal-dark text-white rounded-xl font-bold hover:from-icce-teal-dark hover:to-icce-teal shadow-medium hover:shadow-strong transition-all duration-200"
             >
               Next
               <ArrowRight className="w-5 h-5" />
@@ -365,7 +365,7 @@ export default function AssessmentForm() {
             <button
               onClick={handleSubmit}
               disabled={saving || progress.answered < progress.total}
-              className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition"
+              className="flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-bold hover:from-emerald-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-medium hover:shadow-strong transition-all duration-200"
             >
               <Send className="w-5 h-5" />
               {saving ? 'Submitting...' : 'Submit Assessment'}

@@ -60,20 +60,20 @@ export default function Dashboard() {
   const completedCount = assessments.filter(a => a.status === 'completed').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-icce-gray">
       {/* Header */}
-      <div className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="bg-white shadow-soft border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">ICCE-FITGAP Dashboard</h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Welcome, <span className="font-medium">{user?.email}</span>
+              <h1 className="text-4xl font-bold text-icce-dark tracking-tight">FITGAP Assessment</h1>
+              <p className="text-sm text-gray-600 mt-2 font-medium">
+                Welcome, <span className="text-icce-teal">{user?.email}</span>
               </p>
             </div>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition shadow-sm"
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-soft"
             >
               <LogOut className="w-4 h-4" />
               Sign Out
@@ -82,51 +82,51 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+          <div className="bg-white rounded-2xl shadow-soft p-7 border-l-4 border-icce-teal hover:shadow-medium transition-shadow duration-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Assessments</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{assessments.length}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Total Assessments</p>
+                <p className="text-4xl font-bold text-icce-dark mt-2">{assessments.length}</p>
               </div>
-              <div className="flex-shrink-0 bg-blue-100 rounded-full p-3">
-                <FileText className="h-8 w-8 text-blue-600" />
+              <div className="flex-shrink-0 bg-gradient-to-br from-icce-teal-light to-icce-teal rounded-2xl p-4">
+                <FileText className="h-8 w-8 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+          <div className="bg-white rounded-2xl shadow-soft p-7 border-l-4 border-amber-400 hover:shadow-medium transition-shadow duration-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">In Progress</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{inProgressCount}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">In Progress</p>
+                <p className="text-4xl font-bold text-icce-dark mt-2">{inProgressCount}</p>
               </div>
-              <div className="flex-shrink-0 bg-yellow-100 rounded-full p-3">
-                <Clock className="h-8 w-8 text-yellow-600" />
+              <div className="flex-shrink-0 bg-gradient-to-br from-amber-300 to-amber-400 rounded-2xl p-4">
+                <Clock className="h-8 w-8 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+          <div className="bg-white rounded-2xl shadow-soft p-7 border-l-4 border-emerald-500 hover:shadow-medium transition-shadow duration-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Completed</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{completedCount}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Completed</p>
+                <p className="text-4xl font-bold text-icce-dark mt-2">{completedCount}</p>
               </div>
-              <div className="flex-shrink-0 bg-green-100 rounded-full p-3">
-                <CheckCircle2 className="h-8 w-8 text-green-600" />
+              <div className="flex-shrink-0 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-2xl p-4">
+                <CheckCircle2 className="h-8 w-8 text-white" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="mb-6">
+        <div className="mb-8">
           <button
             onClick={createNewAssessment}
-            className="flex items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-lg hover:shadow-xl transition"
+            className="flex items-center gap-2 px-7 py-3.5 text-base font-bold text-white bg-gradient-to-r from-icce-teal to-icce-teal-dark rounded-xl hover:from-icce-teal-dark hover:to-icce-teal shadow-medium hover:shadow-strong transition-all duration-200"
           >
             <Plus className="w-5 h-5" />
             New Assessment
@@ -134,9 +134,9 @@ export default function Dashboard() {
         </div>
 
         {/* Assessments List */}
-        <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-            <h2 className="text-xl font-bold text-gray-900">My Assessments</h2>
+        <div className="bg-white shadow-medium rounded-2xl overflow-hidden">
+          <div className="px-7 py-6 border-b border-gray-100 bg-gradient-to-r from-icce-teal-light/10 to-icce-teal/10">
+            <h2 className="text-2xl font-bold text-icce-dark">My Assessments</h2>
             <p className="text-sm text-gray-600 mt-1">Track and manage your FITGAP assessments over time</p>
           </div>
 
