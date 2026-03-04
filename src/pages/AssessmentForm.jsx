@@ -58,7 +58,8 @@ export default function AssessmentForm() {
 
     setSaving(true);
     try {
-      await saveAssessment(user.id, assessmentId, {
+      console.log('[SAVE] Saving assessment...', { userId: user.id, assessmentId, dataSize: Object.keys(responses).length });
+      const result = await saveAssessment(user.id, assessmentId, {
         organizationName,
         assessorName,
         responses,
@@ -66,10 +67,11 @@ export default function AssessmentForm() {
         currentRealmIndex,
         currentSectionIndex
       });
+      console.log('[SAVE] Save successful:', result);
       alert('Progress saved successfully!');
     } catch (error) {
-      console.error('Error saving:', error);
-      alert('Error saving assessment');
+      console.error('[SAVE] Error saving:', error);
+      alert(`Error saving assessment: ${error.message}`);
     } finally {
       setSaving(false);
     }
@@ -129,9 +131,20 @@ export default function AssessmentForm() {
     assessmentData.realms.forEach(realm => {
       realm.sections.forEach(section => {
         section.questions.forEach(question => {
-          totalQuestions++;
-          if (responses[question.id] !== undefined && responses[question.id] !== '') {
-            answeredQuestions++;
+          // Count subquestions if they exist
+          if (question.subQuestions && question.subQuestions.length > 0) {
+            question.subQuestions.forEach(subQ => {
+              totalQuestions++;
+              if (responses[subQ.id] !== undefined && responses[subQ.id] !== '') {
+                answeredQuestions++;
+              }
+            });
+          } else {
+            // Count regular question
+            totalQuestions++;
+            if (responses[question.id] !== undefined && responses[question.id] !== '') {
+              answeredQuestions++;
+            }
           }
         });
       });
