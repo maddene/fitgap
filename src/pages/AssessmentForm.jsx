@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { saveAssessment, getAssessment } from '../lib/storage';
 import { assessmentData } from '../data/assessmentQuestions';
@@ -9,13 +9,14 @@ export default function AssessmentForm() {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [currentRealmIndex, setCurrentRealmIndex] = useState(0);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [responses, setResponses] = useState({});
   const [assessmentId, setAssessmentId] = useState(id || `assessment_${Date.now()}`);
   const [saving, setSaving] = useState(false);
-  const [organizationName, setOrganizationName] = useState('');
+  const [organizationName, setOrganizationName] = useState(location.state?.organizationName || '');
   const [assessorName, setAssessorName] = useState('');
   const [showInfoForm, setShowInfoForm] = useState(!id);
 

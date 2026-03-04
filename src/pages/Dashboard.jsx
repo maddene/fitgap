@@ -59,6 +59,28 @@ export default function Dashboard() {
   const inProgressCount = assessments.filter(a => a.status === 'in_progress').length;
   const completedCount = assessments.filter(a => a.status === 'completed').length;
 
+  // Group assessments by organization
+  const groupedAssessments = assessments.reduce((acc, assessment) => {
+    const orgName = assessment.organizationName || 'Unnamed Organization';
+    if (!acc[orgName]) {
+      acc[orgName] = [];
+    }
+    acc[orgName].push(assessment);
+    return acc;
+  }, {});
+
+  // Sort organizations alphabetically and sort assessments within each org by date
+  const sortedOrgs = Object.keys(groupedAssessments).sort();
+  sortedOrgs.forEach(orgName => {
+    groupedAssessments[orgName].sort((a, b) =>
+      new Date(b.updatedAt) - new Date(a.updatedAt)
+    );
+  });
+
+  const createNewAssessmentForOrg = (orgName) => {
+    navigate('/assessment/new', { state: { organizationName: orgName } });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-icce-gray">
       {/* Header */}
@@ -152,82 +174,83 @@ export default function Dashboard() {
               <p className="text-sm">Create your first assessment to get started.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Organization
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Assessor
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Last Updated
-                    </th>
-                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {assessments.map((assessment) => (
-                    <tr key={assessment.id} className="hover:bg-gray-50 transition">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{assessment.organizationName || '-'}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{assessment.assessorName || '-'}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
-                            assessment.status === 'completed'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                          }`}
+            <div className="p-6 space-y-6">
+              {sortedOrgs.map((orgName) => {
+                const orgAssessments = groupedAssessments[orgName];
+                return (
+                  <div key={orgName} className="border-l-4 border-icce-teal bg-gray-50 rounded-r-xl p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="text-xl font-bold text-icce-dark">{orgName}</h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {orgAssessments.length} assessment{orgAssessments.length > 1 ? 's' : ''}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => createNewAssessmentForOrg(orgName)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-icce-teal bg-white border-2 border-icce-teal rounded-lg hover:bg-icce-teal hover:text-white transition-all"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Assessment
+                      </button>
+                    </div>
+
+                    <div className="space-y-2">
+                      {orgAssessments.map((assessment) => (
+                        <div
+                          key={assessment.id}
+                          className="bg-white rounded-lg p-4 flex items-center justify-between hover:shadow-md transition-shadow"
                         >
-                          {assessment.status === 'completed' ? 'Completed' : 'In Progress'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {formatDate(assessment.updatedAt)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-end gap-3">
-                          {assessment.status === 'completed' ? (
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3">
+                              <span
+                                className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
+                                  assessment.status === 'completed'
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-yellow-100 text-yellow-800'
+                                }`}
+                              >
+                                {assessment.status === 'completed' ? 'Completed' : 'In Progress'}
+                              </span>
+                              <span className="text-sm text-gray-600">
+                                by <span className="font-medium text-gray-900">{assessment.assessorName}</span>
+                              </span>
+                              <span className="text-sm text-gray-400">•</span>
+                              <span className="text-sm text-gray-500">{formatDate(assessment.updatedAt)}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            {assessment.status === 'completed' ? (
+                              <button
+                                onClick={() => navigate(`/assessment/${assessment.id}/results`)}
+                                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition"
+                              >
+                                <Eye className="w-4 h-4" />
+                                View Results
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => navigate(`/assessment/${assessment.id}`)}
+                                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-green-600 hover:text-green-800 transition"
+                              >
+                                <FileText className="w-4 h-4" />
+                                Continue
+                              </button>
+                            )}
                             <button
-                              onClick={() => navigate(`/assessment/${assessment.id}/results`)}
-                              className="text-blue-600 hover:text-blue-900 transition"
-                              title="View Results"
+                              onClick={() => deleteAssessment(assessment.id)}
+                              className="p-2 text-red-600 hover:text-red-800 transition"
+                              title="Delete"
                             >
-                              <Eye className="w-5 h-5" />
+                              <Trash2 className="w-4 h-4" />
                             </button>
-                          ) : (
-                            <button
-                              onClick={() => navigate(`/assessment/${assessment.id}`)}
-                              className="text-green-600 hover:text-green-900 transition"
-                              title="Continue Assessment"
-                            >
-                              <FileText className="w-5 h-5" />
-                            </button>
-                          )}
-                          <button
-                            onClick={() => deleteAssessment(assessment.id)}
-                            className="text-red-600 hover:text-red-900 transition"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
+                          </div>
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

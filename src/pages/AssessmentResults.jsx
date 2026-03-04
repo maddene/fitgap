@@ -65,6 +65,9 @@ export default function AssessmentResults() {
     const icce_teal = [91, 196, 159]; // #5BC49F
     const icce_dark = [49, 49, 49]; // #313131
 
+    // Calculate overall rating
+    const overallRating = getRating(scores.overall.percentage);
+
     // Header with ICCE branding
     doc.setFontSize(24);
     doc.setTextColor(icce_dark[0], icce_dark[1], icce_dark[2]);
