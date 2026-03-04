@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import netlifyIdentity from 'netlify-identity-widget';
 
 const AuthContext = createContext({});
 
@@ -13,102 +13,53 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setLoading(false);
-      }
+    // Initialize Netlify Identity
+    netlifyIdentity.init();
+
+    // Check for existing user
+    const currentUser = netlifyIdentity.currentUser();
+    setUser(currentUser);
+    setLoading(false);
+
+    // Listen for login events
+    netlifyIdentity.on('login', (user) => {
+      setUser(user);
+      netlifyIdentity.close();
     });
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setProfile(null);
-        setLoading(false);
-      }
+    // Listen for logout events
+    netlifyIdentity.on('logout', () => {
+      setUser(null);
     });
 
-    return () => subscription.unsubscribe();
+    // Cleanup
+    return () => {
+      netlifyIdentity.off('login');
+      netlifyIdentity.off('logout');
+    };
   }, []);
 
-  const fetchProfile = async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error) throw error;
-      setProfile(data);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    } finally {
-      setLoading(false);
-    }
+  const signUp = () => {
+    netlifyIdentity.open('signup');
   };
 
-  const signUp = async (email, password, metadata) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metadata,
-      },
-    });
-    return { data, error };
+  const signIn = () => {
+    netlifyIdentity.open('login');
   };
 
-  const signIn = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { data, error };
-  };
-
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
-  };
-
-  const updateProfile = async (updates) => {
-    if (!user) return { error: new Error('No user logged in') };
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('id', user.id)
-      .select()
-      .single();
-
-    if (!error && data) {
-      setProfile(data);
-    }
-
-    return { data, error };
+  const signOut = () => {
+    netlifyIdentity.logout();
   };
 
   const value = {
     user,
-    profile,
     loading,
     signUp,
     signIn,
     signOut,
-    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

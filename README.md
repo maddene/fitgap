@@ -13,13 +13,16 @@ Feedback-Informed Treatment GAP Assessment Tool (FITGAP) - An online questionnai
 
 ## Tech Stack
 
-- **Frontend**: React 18 + Vite
+- **Frontend**: React 19 + Vite
 - **Styling**: Tailwind CSS
-- **Authentication**: Supabase Auth
-- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Netlify Identity
+- **Storage**: Netlify Blobs (serverless key-value store)
 - **Charts**: Recharts
 - **PDF Export**: jsPDF + html2canvas
 - **Deployment**: Netlify
+
+**Why This Stack?**
+Simple, scalable, and perfect for small teams (10-20 concurrent users). No database management needed!
 
 ## Setup Instructions
 
@@ -36,37 +39,15 @@ cd icce-fitgap
 npm install
 ```
 
-### 3. Configure Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_HCAPTCHA_SITE_KEY=your_hcaptcha_site_key
-```
-
-### 4. Set Up Supabase
-
-Follow the instructions in [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) to:
-- Create a Supabase project
-- Run the database schema SQL
-- Configure authentication
-- Get your API credentials
-
-### 5. Set Up hCaptcha
-
-1. Go to [https://www.hcaptcha.com/](https://www.hcaptcha.com/)
-2. Sign up and create a new site
-3. Add your site key to `.env`
-
-### 6. Run Development Server
+### 3. Run Development Server
 
 ```bash
 npm run dev
 ```
 
 Visit [http://localhost:5173](http://localhost:5173)
+
+**Note**: For local testing, authentication will only work after deploying to Netlify and enabling Netlify Identity. Locally, you can test the UI without authentication by temporarily commenting out the `<ProtectedRoute>` wrappers in [src/App.jsx](src/App.jsx).
 
 ## Deployment to Netlify
 
@@ -81,27 +62,7 @@ git remote add origin https://github.com/YOUR_USERNAME/icce-fitgap.git
 git push -u origin main
 ```
 
-### 2. Deploy to Netlify
-
-1. Go to [https://app.netlify.com](https://app.netlify.com)
-2. Click "Add new site" > "Import an existing project"
-3. Connect your GitHub repository
-4. Configure build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-5. Add environment variables in Netlify:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-   - `VITE_HCAPTCHA_SITE_KEY`
-6. Deploy!
-
-### 3. Update Supabase Site URL
-
-In your Supabase project:
-1. Go to Authentication > URL Configuration
-2. Add your Netlify URL to allowed redirect URLs
-
-## Project Structure
+### 2. Deploy to Netlify1. Go to [https://app.netlify.com](https://app.netlify.com)2. Click "Add new site" > "Import an existing project"3. Connect your GitHub repository4. Configure build settings:   - Build command: `npm run build`   - Publish directory: `dist`5. Deploy!### 3. Enable Netlify IdentityAfter deployment:1. Go to your site in Netlify Dashboard2. Navigate to **Site settings** > **Identity**3. Click **Enable Identity**4. Under **Registration preferences**, choose "Invite only" or "Open"5. (Optional) Enable external providers (Google, GitHub, etc.)## Project Structure
 
 ```
 icce-fitgap/
