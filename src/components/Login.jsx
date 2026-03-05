@@ -65,11 +65,7 @@ export default function Login() {
               </a>
             </div>
 
-            <p className="text-center text-lg font-bold text-icce-dark mb-2">
-              The International Center for Clinical Excellence
-            </p>
-
-            <div className="flex items-center justify-center gap-3 mt-6">
+            <div className="flex items-center justify-center gap-3 mt-4">
               <div className="h-px bg-gray-300 flex-1"></div>
               <p className="text-sm text-gray-500 font-semibold">by</p>
               <div className="h-px bg-gray-300 flex-1"></div>
