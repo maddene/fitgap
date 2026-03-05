@@ -13,29 +13,84 @@ export default function Login() {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            FITGAP Assessment
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Feedback-Informed Treatment GAP Assessment Tool
-          </p>
-        </div>
-        <div className="mt-8 space-y-4">
-          <button
-            onClick={signIn}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Sign In
-          </button>
-          <button
-            onClick={signUp}
-            className="group relative w-full flex justify-center py-2 px-4 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Create Account
-          </button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-icce-gray py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl w-full">
+        {/* Main Card */}
+        <div className="bg-white rounded-3xl shadow-strong p-10">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-5xl font-bold text-icce-dark tracking-tight mb-3">
+              FITGAP Assessment
+            </h2>
+            <p className="text-lg text-gray-600 font-medium">
+              Feedback-Informed Treatment GAP Assessment Tool
+            </p>
+          </div>
+
+          {/* Login Buttons */}
+          <div className="space-y-4 mb-10">
+            <button
+              onClick={signIn}
+              className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-bold rounded-xl text-white bg-gradient-to-r from-icce-teal to-icce-teal-dark hover:from-icce-teal-dark hover:to-icce-teal shadow-medium hover:shadow-strong transition-all duration-200"
+            >
+              Sign In
+            </button>
+            <button
+              onClick={signUp}
+              className="group relative w-full flex justify-center py-4 px-6 border-2 border-icce-teal text-lg font-bold rounded-xl text-icce-teal bg-white hover:bg-icce-teal hover:text-white transition-all duration-200"
+            >
+              Create Account
+            </button>
+          </div>
+
+          {/* Partnership Section */}
+          <div className="border-t-2 border-gray-100 pt-8">
+            <p className="text-center text-sm text-gray-600 font-semibold mb-6 uppercase tracking-wider">
+              Built for
+            </p>
+
+            {/* ICCE Logo */}
+            <div className="flex justify-center mb-6">
+              <a
+                href="https://centerforclinicalexcellence.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <img
+                  src="/images/icce-logo.jpg"
+                  alt="International Center for Clinical Excellence"
+                  className="h-16 object-contain"
+                />
+              </a>
+            </div>
+
+            <p className="text-center text-lg font-bold text-icce-dark mb-2">
+              The International Center for Clinical Excellence
+            </p>
+
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <div className="h-px bg-gray-300 flex-1"></div>
+              <p className="text-sm text-gray-500 font-semibold">by</p>
+              <div className="h-px bg-gray-300 flex-1"></div>
+            </div>
+
+            {/* OpenFIT Logo */}
+            <div className="flex justify-center mt-6">
+              <a
+                href="https://openfit.care"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <img
+                  src="/images/openfit-logo.png"
+                  alt="OpenFIT.care"
+                  className="h-12 object-contain"
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
