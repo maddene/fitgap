@@ -22,9 +22,25 @@ export default function Login() {
             <h2 className="text-5xl font-bold text-icce-dark tracking-tight mb-3">
               FITGAP Assessment
             </h2>
-            <p className="text-lg text-gray-600 font-medium">
+            <p className="text-lg text-gray-600 font-medium mb-4">
               Feedback-Informed Treatment GAP Assessment Tool
             </p>
+            <div className="bg-icce-teal/5 rounded-xl p-5 mt-6 border border-icce-teal/20">
+              <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                Feedback-Informed Treatment (FIT) is an evidence-based approach that uses client feedback to improve therapeutic outcomes.
+                The FITGAP Assessment Tool helps organizations evaluate their current implementation of FIT practices and identify
+                areas for development across four key realms: Alliance, Outcome Monitoring, Clinical Decision Making, and Organizational Support.
+              </p>
+              <p className="text-sm text-gray-600">
+                For more information on Training and Consultancy please email{' '}
+                <a
+                  href="mailto:info@centerforclinicalexcellence.com"
+                  className="font-semibold text-icce-teal hover:text-icce-teal-dark transition-colors"
+                >
+                  info@centerforclinicalexcellence.com
+                </a>
+              </p>
+            </div>
           </div>
 
           {/* Login Buttons */}
