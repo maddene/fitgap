@@ -58,7 +58,7 @@ export default function Login() {
                 className="hover:opacity-80 transition-opacity"
               >
                 <img
-                  src="/images/icce-logo.jpg"
+                  src="/images/icce-logo.png"
                   alt="International Center for Clinical Excellence"
                   className="h-14 object-contain"
                 />
