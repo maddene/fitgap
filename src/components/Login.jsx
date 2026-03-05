@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
@@ -101,6 +101,15 @@ export default function Login() {
                   className="h-14 object-contain"
                 />
               </a>
+            </div>
+
+            {/* Privacy Policy Link */}
+            <div className="mt-6 text-center">
+              <p className="text-xs text-gray-400">
+                <Link to="/privacy" className="hover:text-icce-teal transition-colors">
+                  Privacy Policy
+                </Link>
+              </p>
             </div>
           </div>
         </div>

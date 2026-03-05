@@ -574,7 +574,7 @@ export default function AssessmentResults() {
 
         {/* Footer */}
         <div className="mt-8 text-center pb-6">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mb-2">
             Built for <span className="font-semibold text-icce-teal">The International Center for Clinical Excellence</span> by{' '}
             <a
               href="https://openfit.care"
@@ -584,6 +584,11 @@ export default function AssessmentResults() {
             >
               OpenFIT.care
             </a>
+          </p>
+          <p className="text-xs text-gray-400">
+            <Link to="/privacy" className="hover:text-icce-teal transition-colors">
+              Privacy Policy
+            </Link>
           </p>
         </div>
       </div>

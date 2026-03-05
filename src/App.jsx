@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import AssessmentForm from './pages/AssessmentForm';
 import AssessmentResults from './pages/AssessmentResults';
 import CompareResults from './pages/CompareResults';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route
             path="/dashboard"
             element={
