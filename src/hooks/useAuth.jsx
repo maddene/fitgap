@@ -69,7 +69,8 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = () => {
     if (MOCK_MODE) {
-      console.log('[MOCK MODE] Sign out not available in dev mode');
+      console.log('[MOCK MODE] Signing out mock user');
+      setUser(null);
       return;
     }
     netlifyIdentity.logout();

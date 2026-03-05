@@ -60,7 +60,7 @@ export default function Login() {
                 <img
                   src="/images/icce-logo.jpg"
                   alt="International Center for Clinical Excellence"
-                  className="h-16 object-contain"
+                  className="h-14 object-contain"
                 />
               </a>
             </div>
@@ -86,7 +86,7 @@ export default function Login() {
                 <img
                   src="/images/openfit-logo.png"
                   alt="OpenFIT.care"
-                  className="h-12 object-contain"
+                  className="h-14 object-contain"
                 />
               </a>
             </div>
