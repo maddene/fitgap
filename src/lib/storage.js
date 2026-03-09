@@ -2,15 +2,39 @@
 import { MOCK_MODE, mockStorageApi } from './mockData';
 
 const getAuthToken = () => {
+  if (MOCK_MODE) {
+    return 'mock-token';
+  }
+
   const user = window.netlifyIdentity?.currentUser();
-  return user?.token?.access_token;
+  if (!user) {
+    console.warn('[AUTH] No current user found via netlifyIdentity.currentUser()');
+    console.warn('[AUTH] netlifyIdentity exists:', !!window.netlifyIdentity);
+    return null;
+  }
+
+  console.log('[AUTH] User object:', {
+    hasUser: !!user,
+    hasToken: !!user.token,
+    hasAccessToken: !!user.token?.access_token,
+    tokenKeys: user.token ? Object.keys(user.token) : []
+  });
+
+  const token = user.token?.access_token;
+  if (!token) {
+    console.error('[AUTH] User found but no access token. User structure:', JSON.stringify(user, null, 2));
+  }
+
+  return token;
 };
 
 const apiCall = async (endpoint, options = {}) => {
   const token = getAuthToken();
 
-  if (!token) {
-    throw new Error('Authentication required. Please log in again.');
+  // Don't throw error client-side - let the server respond with 401 if token is invalid
+  // This prevents false positives from timing issues with netlifyIdentity initialization
+  if (!token && !MOCK_MODE) {
+    console.warn('[AUTH] No token available for API call - request will likely fail with 401');
   }
 
   try {
@@ -18,7 +42,7 @@ const apiCall = async (endpoint, options = {}) => {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...options.headers,
       },
     });
@@ -36,10 +60,12 @@ const apiCall = async (endpoint, options = {}) => {
 
       // Handle specific error cases
       if (response.status === 401) {
+        console.error('[AUTH] Received 401 Unauthorized from server');
         throw new Error('Your session has expired. Please log in again.');
       } else if (response.status === 403) {
         throw new Error('You do not have permission to perform this action.');
       } else if (response.status >= 500) {
+        console.error('[SERVER] Server error:', errorMessage);
         throw new Error('Server error. Please try again in a few moments.');
       }
 
@@ -50,6 +76,7 @@ const apiCall = async (endpoint, options = {}) => {
   } catch (error) {
     // Handle network errors
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      console.error('[NETWORK] Network error:', error);
       throw new Error('Network error. Please check your internet connection and try again.');
     }
     throw error;
