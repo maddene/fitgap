@@ -9,21 +9,51 @@ const getAuthToken = () => {
 const apiCall = async (endpoint, options = {}) => {
   const token = getAuthToken();
 
-  const response = await fetch(`/.netlify/functions/assessments${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      ...options.headers,
-    },
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'API request failed');
+  if (!token) {
+    throw new Error('Authentication required. Please log in again.');
   }
 
-  return response.json();
+  try {
+    const response = await fetch(`/.netlify/functions/assessments${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
+
+    if (!response.ok) {
+      let errorMessage = `Request failed with status ${response.status}`;
+
+      try {
+        const error = await response.json();
+        errorMessage = error.error || errorMessage;
+      } catch (parseError) {
+        // If we can't parse the error response, use the status text
+        errorMessage = response.statusText || errorMessage;
+      }
+
+      // Handle specific error cases
+      if (response.status === 401) {
+        throw new Error('Your session has expired. Please log in again.');
+      } else if (response.status === 403) {
+        throw new Error('You do not have permission to perform this action.');
+      } else if (response.status >= 500) {
+        throw new Error('Server error. Please try again in a few moments.');
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  } catch (error) {
+    // Handle network errors
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Network error. Please check your internet connection and try again.');
+    }
+    throw error;
+  }
 };
 
 // Save an assessment

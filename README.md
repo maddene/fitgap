@@ -109,6 +109,78 @@ icce-fitgap/
 
 © 2023, Miller & Bargmann
 
+## Troubleshooting
+
+### Common Issues
+
+#### "Error saving assessment" or "Error submitting assessment"
+
+**Possible causes:**
+
+1. **Session expired**: If you've been working on the assessment for a long time, your login session may have expired
+   - **Solution**: The app will prompt you to reload the page. Your progress will be preserved temporarily and restored after you log in again
+
+2. **Network connection issues**: Check your internet connection
+   - **Solution**: Reconnect to the internet and try saving again. The app will prompt you to retry
+
+3. **Browser compatibility**: Make sure you're using a modern browser (Chrome, Firefox, Safari, Edge)
+   - **Solution**: Try updating your browser or switching to a different browser
+
+#### "Login not recognized after switching browsers"
+
+**Cause**: Netlify Identity uses browser cookies for authentication. Each browser maintains separate cookies/sessions.
+
+**Solutions:**
+- Don't switch browsers mid-assessment
+- If you need to switch browsers, log out from the first browser and log in to the second
+- Your saved assessments are stored on the server and will be available after logging in from any browser
+
+#### "Password recovery not working"
+
+**Cause**: Netlify Identity handles password recovery. The email may be:
+- In your spam/junk folder
+- Delayed by a few minutes
+- Blocked by your email provider
+
+**Solutions:**
+1. Check your spam/junk folder
+2. Wait 5-10 minutes and check again
+3. Try the "Forgot Password" link again
+4. Contact your administrator at info@centerforclinicalexcellence.com if the issue persists
+
+#### "Progress not saved after reload"
+
+**Cause**: You may have:
+- Not clicked the "Save Progress" button before closing
+- Experienced a network error during save
+- Cleared your browser cookies/cache
+
+**Prevention:**
+- Click "Save Progress" frequently while completing the assessment
+- Don't close the browser tab until you see "Progress saved successfully!"
+- Keep a stable internet connection while working
+
+### Browser-Specific Issues
+
+#### Safari Issues
+- Make sure "Prevent cross-site tracking" is **disabled** for this site (Safari > Preferences > Privacy)
+- Ensure cookies are enabled (Safari > Preferences > Privacy > uncheck "Block all cookies")
+
+#### Chrome/Edge Issues
+- Make sure third-party cookies are allowed for this site
+- Check that you're not in Incognito/Private mode (authentication won't persist)
+
+### Technical Support
+
+If you continue experiencing issues after trying these solutions:
+
+1. **Check the browser console** (F12 or right-click > Inspect > Console tab) for error messages
+2. **Take a screenshot** of any error messages
+3. **Contact support** at info@centerforclinicalexcellence.com with:
+   - What browser and version you're using
+   - What you were trying to do when the error occurred
+   - Any error messages or screenshots
+
 ## Support
 
-For issues or questions, please contact your system administrator.
+For issues or questions, please contact your system administrator or email info@centerforclinicalexcellence.com.

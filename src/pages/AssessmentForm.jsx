@@ -28,6 +28,35 @@ export default function AssessmentForm() {
     if (id && user) {
       loadAssessment();
     }
+
+    // Check for temp data from sessionStorage (in case of auth reload)
+    const tempData = sessionStorage.getItem('fitgap_temp_responses');
+    if (tempData) {
+      try {
+        const parsed = JSON.parse(tempData);
+        const timestamp = new Date(parsed.timestamp);
+        const now = new Date();
+        const minutesAgo = (now - timestamp) / 1000 / 60;
+
+        // Only restore if less than 30 minutes old
+        if (minutesAgo < 30) {
+          console.log('[RESTORE] Restoring progress from sessionStorage');
+          setOrganizationName(parsed.organizationName || '');
+          setAssessorName(parsed.assessorName || '');
+          setResponses(parsed.responses || {});
+          setCurrentRealmIndex(parsed.currentRealmIndex || 0);
+          setCurrentSectionIndex(parsed.currentSectionIndex || 0);
+
+          alert('Your previous progress has been restored. Please save your work.');
+        }
+
+        // Clear the temp data
+        sessionStorage.removeItem('fitgap_temp_responses');
+      } catch (error) {
+        console.error('[RESTORE] Error restoring from sessionStorage:', error);
+        sessionStorage.removeItem('fitgap_temp_responses');
+      }
+    }
   }, [id, user]);
 
   const loadAssessment = async () => {
@@ -38,9 +67,24 @@ export default function AssessmentForm() {
         setOrganizationName(data.organizationName || '');
         setAssessorName(data.assessorName || '');
         setShowInfoForm(false);
+
+        // Restore position if it was saved
+        if (data.currentRealmIndex !== undefined) {
+          setCurrentRealmIndex(data.currentRealmIndex);
+        }
+        if (data.currentSectionIndex !== undefined) {
+          setCurrentSectionIndex(data.currentSectionIndex);
+        }
       }
     } catch (error) {
-      console.error('Error loading assessment:', error);
+      console.error('[LOAD] Error loading assessment:', error);
+
+      // Provide user-friendly error message
+      if (error.message.includes('session has expired') || error.message.includes('Authentication required')) {
+        alert(`${error.message}\n\nPlease try logging in again.`);
+      } else if (error.message.includes('Network error')) {
+        alert(`${error.message}\n\nYou can still start a new assessment, but saved data cannot be loaded at this time.`);
+      }
     }
   };
 
@@ -72,7 +116,31 @@ export default function AssessmentForm() {
       alert('Progress saved successfully!');
     } catch (error) {
       console.error('[SAVE] Error saving:', error);
-      alert(`Error saving assessment: ${error.message}`);
+
+      // If it's an auth error, prompt user to log in again
+      if (error.message.includes('session has expired') || error.message.includes('Authentication required')) {
+        const shouldReload = window.confirm(`${error.message}\n\nWould you like to reload the page to log in again? Your current progress will be preserved in your browser.`);
+        if (shouldReload) {
+          // Store responses in sessionStorage before reload
+          try {
+            sessionStorage.setItem('fitgap_temp_responses', JSON.stringify({
+              organizationName,
+              assessorName,
+              responses,
+              currentRealmIndex,
+              currentSectionIndex,
+              timestamp: new Date().toISOString()
+            }));
+          } catch (storageError) {
+            console.error('Error saving to sessionStorage:', storageError);
+          }
+          window.location.reload();
+        }
+      } else if (error.message.includes('Network error')) {
+        alert(`${error.message}\n\nYour progress has been saved locally. Please check your internet connection and try saving again.`);
+      } else {
+        alert(`Error saving assessment: ${error.message}\n\nPlease try again or contact support if the problem persists.`);
+      }
     } finally {
       setSaving(false);
     }
@@ -86,6 +154,7 @@ export default function AssessmentForm() {
 
     setSaving(true);
     try {
+      console.log('[SUBMIT] Submitting assessment...', { userId: user.id, assessmentId });
       await saveAssessment(user.id, assessmentId, {
         organizationName,
         assessorName,
@@ -93,11 +162,36 @@ export default function AssessmentForm() {
         status: 'completed',
         completedAt: new Date().toISOString()
       });
+      console.log('[SUBMIT] Submit successful, navigating to results');
       navigate(`/assessment/${assessmentId}/results`);
     } catch (error) {
-      console.error('Error submitting:', error);
-      alert('Error submitting assessment');
+      console.error('[SUBMIT] Error submitting:', error);
       setSaving(false);
+
+      // If it's an auth error, prompt user to log in again
+      if (error.message.includes('session has expired') || error.message.includes('Authentication required')) {
+        const shouldReload = window.confirm(`${error.message}\n\nWould you like to reload the page to log in again? Your current progress will be preserved in your browser.`);
+        if (shouldReload) {
+          // Store responses in sessionStorage before reload
+          try {
+            sessionStorage.setItem('fitgap_temp_responses', JSON.stringify({
+              organizationName,
+              assessorName,
+              responses,
+              currentRealmIndex,
+              currentSectionIndex,
+              timestamp: new Date().toISOString()
+            }));
+          } catch (storageError) {
+            console.error('Error saving to sessionStorage:', storageError);
+          }
+          window.location.reload();
+        }
+      } else if (error.message.includes('Network error')) {
+        alert(`${error.message}\n\nYour assessment has been saved locally but could not be submitted. Please check your internet connection and try submitting again.`);
+      } else {
+        alert(`Error submitting assessment: ${error.message}\n\nPlease try again or contact support if the problem persists.`);
+      }
     }
   };
 
