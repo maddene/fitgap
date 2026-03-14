@@ -6,9 +6,18 @@ export default async (req, context) => {
   const method = req.method;
 
   try {
+    // Debug logging
+    console.log('Function called:', { method, url: url.pathname });
+    console.log('Context:', {
+      hasClientContext: !!context.clientContext,
+      hasUser: !!context.clientContext?.user,
+      authHeader: req.headers.get('authorization') ? 'present' : 'missing'
+    });
+
     // Get user from Netlify Identity
     const user = context.clientContext?.user;
     if (!user) {
+      console.error('No user in context. ClientContext:', JSON.stringify(context.clientContext));
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
