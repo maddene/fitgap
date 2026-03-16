@@ -4,8 +4,10 @@ import { useAuth } from '../hooks/useAuth';
 import { listUserAssessments } from '../lib/storage';
 import { compareAssessments } from '../lib/comparison';
 import { getRating } from '../lib/scoring';
-import { ArrowLeft, TrendingUp, TrendingDown, Minus, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowLeft, TrendingUp, TrendingDown, Minus, ArrowUp, ArrowDown, Download } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 
 export default function CompareResults() {
   const { orgName } = useParams();
@@ -48,6 +50,95 @@ export default function CompareResults() {
     }
   };
 
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.width;
+    let yPos = 20;
+
+    const icce_teal = [91, 196, 159];
+    const icce_dark = [49, 49, 49];
+    const decodedOrgName = decodeURIComponent(orgName);
+
+    // Header
+    doc.setFontSize(24);
+    doc.setTextColor(icce_dark[0], icce_dark[1], icce_dark[2]);
+    doc.setFont(undefined, 'bold');
+    doc.text('Assessment Comparison Report', pageWidth / 2, yPos, { align: 'center' });
+
+    yPos += 10;
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'normal');
+    doc.text(decodedOrgName, pageWidth / 2, yPos, { align: 'center' });
+
+    yPos += 8;
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`${orgAssessments.length} Assessments Compared`, pageWidth / 2, yPos, { align: 'center' });
+
+    yPos += 15;
+
+    // Overall Trend
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(icce_dark[0], icce_dark[1], icce_dark[2]);
+    doc.text('Overall Score Trend', 14, yPos);
+    yPos += 10;
+
+    const trendData = overallTrend.map((item, index) => [
+      `Assessment ${index + 1}`,
+      new Date(orgAssessments[index].completedAt).toLocaleDateString(),
+      `${item.percentage}%`
+    ]);
+
+    doc.autoTable({
+      startY: yPos,
+      head: [['Assessment', 'Date', 'Score']],
+      body: trendData,
+      theme: 'grid',
+      headStyles: { fillColor: icce_teal, textColor: [255, 255, 255], fontStyle: 'bold' }
+    });
+
+    yPos = doc.lastAutoTable.finalY + 15;
+
+    // Realm Trends
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('Realm Score Trends', 14, yPos);
+    yPos += 10;
+
+    realmTrends.forEach((realm) => {
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.text(realm.name, 14, yPos);
+      yPos += 8;
+
+      const realmData = realm.data.map((item, index) => [
+        `Assessment ${index + 1}`,
+        `${item.percentage}%`
+      ]);
+
+      doc.autoTable({
+        startY: yPos,
+        head: [['Assessment', 'Score']],
+        body: realmData,
+        theme: 'grid',
+        headStyles: { fillColor: icce_teal, textColor: [255, 255, 255], fontSize: 9 },
+        margin: { left: 20 }
+      });
+
+      yPos = doc.lastAutoTable.finalY + 10;
+    });
+
+    // Save PDF
+    const fileName = `${decodedOrgName.replace(/[^a-z0-9]/gi, '_')}_Comparison_${new Date().toLocaleDateString()}.pdf`;
+    doc.save(fileName);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-icce-gray flex items-center justify-center">
@@ -71,13 +162,23 @@ export default function CompareResults() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 text-icce-teal hover:text-icce-teal-dark font-semibold mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </Link>
+          <div className="flex items-center justify-between mb-6">
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-2 text-icce-teal hover:text-icce-teal-dark font-semibold transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Link>
+
+            <button
+              onClick={handleExportPDF}
+              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-icce-teal to-icce-teal-dark text-white rounded-lg hover:shadow-lg transition-all duration-200 font-semibold"
+            >
+              <Download className="w-5 h-5" />
+              Export PDF
+            </button>
+          </div>
 
           <div className="bg-white rounded-2xl shadow-medium p-8">
             <h1 className="text-4xl font-bold text-icce-dark mb-2 tracking-tight">Assessment Comparison</h1>

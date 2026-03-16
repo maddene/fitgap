@@ -5,8 +5,8 @@ import { getAssessment } from '../lib/storage';
 import { calculateScores, getRating, getScoreLabel, getLowScoreQuestions } from '../lib/scoring';
 import { assessmentData } from '../data/assessmentQuestions';
 import { ArrowLeft, Download, BarChart3, CheckCircle, TrendingUp, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 
 export default function AssessmentResults() {
   const { id } = useParams();
