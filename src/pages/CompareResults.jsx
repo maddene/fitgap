@@ -114,10 +114,10 @@ export default function CompareResults() {
 
       doc.setFontSize(12);
       doc.setFont(undefined, 'bold');
-      doc.text(realm.name, 14, yPos);
+      doc.text(realm.realmName, 14, yPos);
       yPos += 8;
 
-      const realmData = realm.data.map((item, index) => [
+      const realmData = realm.trend.map((item, index) => [
         `Assessment ${index + 1}`,
         `${item.percentage}%`
       ]);
