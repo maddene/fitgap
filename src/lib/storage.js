@@ -67,7 +67,10 @@ export const listUserAssessments = async (userId) => {
     return mockStorageApi.listUserAssessments(userId);
   }
 
-  return apiCall('');
+  console.log('[LIST] Fetching assessments for user:', userId);
+  const result = await apiCall('');
+  console.log('[LIST] Got assessments:', result);
+  return result;
 };
 
 // Delete an assessment
