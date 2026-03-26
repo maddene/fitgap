@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { saveAssessment, getAssessment } from '../lib/storage';
 import { assessmentData } from '../data/assessmentQuestions';
-import { ArrowLeft, ArrowRight, Save, Send, CheckCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Save, Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function AssessmentForm() {
   const { id } = useParams();
@@ -187,6 +187,42 @@ export default function AssessmentForm() {
   };
 
   const sectionProgress = getSectionProgress();
+
+  const getUnansweredQuestions = () => {
+    const unanswered = [];
+    assessmentData.realms.forEach((realm, realmIdx) => {
+      realm.sections.forEach((section, sectionIdx) => {
+        section.questions.forEach(question => {
+          if (question.subQuestions && question.subQuestions.length > 0) {
+            const unansweredSubs = question.subQuestions.filter(subQ => responses[subQ.id] === undefined);
+            if (unansweredSubs.length > 0) {
+              unanswered.push({
+                questionId: question.id,
+                text: question.text,
+                realmName: realm.name,
+                sectionName: section.name,
+                realmIdx,
+                sectionIdx,
+                missingSubQuestions: unansweredSubs.map(sq => sq.id)
+              });
+            }
+          } else {
+            if (responses[question.id] === undefined) {
+              unanswered.push({
+                questionId: question.id,
+                text: question.text,
+                realmName: realm.name,
+                sectionName: section.name,
+                realmIdx,
+                sectionIdx
+              });
+            }
+          }
+        });
+      });
+    });
+    return unanswered;
+  };
 
   const getSectionProgressByIndex = (realmIdx, sectionIdx) => {
     const realm = assessmentData.realms[realmIdx];
@@ -503,6 +539,43 @@ export default function AssessmentForm() {
             </button>
           )}
         </div>
+
+        {/* Unanswered Questions */}
+        {isLastSection && progress.answered < progress.total && (() => {
+          const unanswered = getUnansweredQuestions();
+          return (
+            <div className="mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertCircle className="w-5 h-5 text-amber-600 flex-none" />
+                <h3 className="text-base font-bold text-amber-800">
+                  {unanswered.length} unanswered question{unanswered.length !== 1 ? 's' : ''} remaining
+                </h3>
+              </div>
+              <p className="text-sm text-amber-700 mb-4">
+                Use the <strong>"Jump to Section"</strong> dropdown above to navigate back and complete these questions.
+              </p>
+              <ul className="space-y-2">
+                {unanswered.map(q => (
+                  <li key={q.questionId} className="flex items-start gap-3">
+                    <button
+                      onClick={() => {
+                        setCurrentRealmIndex(q.realmIdx);
+                        setCurrentSectionIndex(q.sectionIdx);
+                      }}
+                      className="text-sm text-left text-amber-900 hover:text-icce-teal transition-colors group"
+                    >
+                      <span className="font-semibold text-amber-600 group-hover:text-icce-teal">Q{q.questionId}</span>
+                      <span className="text-amber-500 mx-1.5">&middot;</span>
+                      <span className="font-medium">{q.sectionName}</span>
+                      <span className="text-amber-500 mx-1.5">&middot;</span>
+                      <span className="text-amber-700 group-hover:underline">{q.text.length > 80 ? q.text.slice(0, 80) + '…' : q.text}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })()}
 
         {/* Footer */}
         <div className="mt-8 text-center pb-6">

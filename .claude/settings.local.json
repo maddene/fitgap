@@ -22,7 +22,9 @@
       "Bash(curl:*)",
       "Bash(git restore:*)",
       "Bash(git rm:*)",
-      "Bash(temp_storage.js)"
+      "Bash(temp_storage.js)",
+      "Bash(npm run build:*)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []
